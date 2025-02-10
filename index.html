@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>svit College Bus Tracking</h1>
+        <h1>SVIT College Bus Tracking</h1>
 
         <!-- Announcements Section -->
         <h2>Announcements</h2>
@@ -38,16 +38,29 @@
             let username = document.getElementById("username").value;
             let password = document.getElementById("password").value;
 
-            if (userType === "student" && username === "student" && password === "1234") {
-                window.location.href = "student.html";
+            // Fetch stored data from localStorage
+            let students = JSON.parse(localStorage.getItem("students")) || [];
+            let drivers = JSON.parse(localStorage.getItem("drivers")) || [];
+
+            if (userType === "student") {
+                let student = students.find(s => s.studentID === username && s.studentPassword === password);
+                if (student) {
+                    window.location.href = "student.html"; // Redirect to bus selection page
+                    return;
+                }
             } else if (userType === "admin" && username === "admin" && password === "admin123") {
-                window.location.href = "management.html";
-            } else if (userType === "driver" && username.startsWith("driver") && password === "driverpass") {
-                localStorage.setItem("driverID", username); // Store driver ID for tracking
-                window.location.href = "driver_tracking.html";
-            } else {
-                alert("Invalid login details!");
+                window.location.href = "managment.html"; // Redirect to admin panel
+                return;
+            } else if (userType === "driver") {
+                let driver = drivers.find(d => d.driverID === username && d.driverPassword === password);
+                if (driver) {
+                    localStorage.setItem("driverID", username); // Store driver ID for tracking
+                    window.location.href = "driver_traking.html"; // Redirect to location sharing page
+                    return;
+                }
             }
+
+            alert("Invalid login details!");
         }
 
         document.addEventListener("DOMContentLoaded", displayAnnouncement);
